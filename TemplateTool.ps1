@@ -55,10 +55,7 @@ $List.MultiColumn = "true";
 $List.FullRowSelect = "true";
 $List.View = 'Details'
 $List.Columns.Add('Issue')
-$List.Columns.Add('Description')
-$List.VerticalScrollbar = "true";
-$List.FormattingEnabled = "true";
-$List.ScrollAlwaysVisible = "true";
+$List.Columns.Add('Description');
 $List.HideSelection = "false";
 $List.BackColor = "white"
 $List.Columns[0].Width = 100
