@@ -1,65 +1,50 @@
 ﻿Add-Type -AssemblyName System.Windows.Forms
 
+
+$windowHeight = 700;
+$windowWidth = 700;
+$sidebarSize = 210;
+
 $Form = New-Object system.Windows.Forms.Form
 $Form.Text = "Template Tool"
-$Form.Size = New-Object System.Drawing.Size(400,500)
-$Form.FormBorderStyle = "FixedDialog"
+$Form.Size = New-Object System.Drawing.Size($windowWidth,$windowHeight)
+$Form.FormBorderStyle = "FixedSingle"
 
-$About = New-Object System.Windows.Forms.Label
-$About.Text = "Written by: Jacob Gonzalez"
-$About.Location = New-Object System.Drawing.Size(5,454)
-$About.Size = New-Object System.Drawing.Size(300,20)
+$Button1 = CreateButton "Copy" ($sidebarSize + 10) ($windowHeight - 80) 80 40
+$Button2 = CreateButton "Remote" (10) (80) 190 40
+$Address = CreateInput (10) (130) 190 40
 
-#Normal Inputs
-$Label1 = New-Object System.Windows.Forms.Label
-$Label1.Text = "Input1"
-$Label1.Location = New-Object System.Drawing.Size(10,24)
-$Template1 = New-Object System.Windows.Forms.Textbox
-$Template1.Location = New-Object System.Drawing.Size(56,20)
-$Template1.Size = New-Object System.Drawing.Size(300,20)
+$input1 = CreateInput ($sidebarSize + 150) 80 ($windowWidth - ($sidebarSize + 170)) 40
+CreateText "Input 1" ($sidebarSize + 10) 76 130 40 12 "Black" "#F0F0F0";
+$input2 = CreateInput ($sidebarSize + 150) 120 ($windowWidth - ($sidebarSize + 170)) 40
+CreateText "Input 2" ($sidebarSize + 10) 116 130 40 12 "Black" "#F0F0F0";
+$input3 = CreateInput ($sidebarSize + 150) 160 ($windowWidth - ($sidebarSize + 170)) 40
+CreateText "Input 3" ($sidebarSize + 10) 156 130 40 12 "Black" "#F0F0F0";
 
-$Label2 = New-Object System.Windows.Forms.Label
-$Label2.Text = "Input2"
-$Label2.Location = New-Object System.Drawing.Size(10,54)
-$Template2 = New-Object System.Windows.Forms.Textbox
-$Template2.Location = New-Object System.Drawing.Size(56,50)
-$Template2.Size = New-Object System.Drawing.Size(300,20)
+$input4 = CreateInput ($sidebarSize + 150)  380 ($windowWidth - ($sidebarSize + 170)) 40
+CreateText "Input 4" ($sidebarSize + 10) 376 130 40 12 "Black" "#F0F0F0";
+$input5 = CreateInput ($sidebarSize + 150) 420 ($windowWidth - ($sidebarSize + 170)) 40
+CreateText "Input 5" ($sidebarSize + 10) 416 130 40 12 "Black" "#F0F0F0";
+$input6 = CreateInput ($sidebarSize + 150) 460 ($windowWidth - ($sidebarSize + 170)) 40
+CreateText "Input 6" ($sidebarSize + 10) 456 130 40 12 "Black" "#F0F0F0";
 
-$Label3 = New-Object System.Windows.Forms.Label
-$Label3.Text = "Input3"
-$Label3.Location = New-Object System.Drawing.Size(10,84)
-$Template3 = New-Object System.Windows.Forms.Textbox
-$Template3.Location = New-Object System.Drawing.Size(56,80)
-$Template3.Size = New-Object System.Drawing.Size(300,20)
+CreateText "Input" ($sidebarSize + 120) ($windowHeight - 70) 50 20 12 "Black" "#F0F0F0";
+$option1 = CreateCheckbox ($sidebarSize + 100) ($windowHeight - 72)
 
-#Copy Button
-$Button1 = New-Object System.Windows.Forms.Button
-$Button1.Text = "Copy"
-$Button1.Size = New-Object System.Drawing.Size(60,30)
-$Button1.Location = New-Object System.Drawing.Size(310,420)
-
-#Screenshare Button
-$Button2 = New-Object System.Windows.Forms.Button
-$Button2.Text = "Screenshare"
-$Button2.Size = New-Object System.Drawing.Size(100,30)
-$Button2.Location = New-Object System.Drawing.Size(10,420)
-$Address = New-Object System.Windows.Forms.Textbox
-$Address.Location = New-Object System.Drawing.Size(120,425)
-$Address.Size = New-Object System.Drawing.Size(70,20)
 
 #List object
 $List = New-Object System.Windows.Forms.ListView
-$List.Size = New-Object System.Drawing.Size(360,114)
-$List.Location = New-Object System.Drawing.Size(10,114)
-$List.MultiColumn = "true";
+$List.Size = New-Object System.Drawing.Size(($windowWidth - ($sidebarSize + 30)), 170)
+$List.Location = New-Object System.Drawing.Size(($sidebarSize + 10), 200)
 $List.FullRowSelect = "true";
 $List.View = 'Details'
 $List.Columns.Add('Issue')
-$List.Columns.Add('Description');
+$List.Columns.Add('Description')
 $List.HideSelection = "false";
 $List.BackColor = "white"
 $List.Columns[0].Width = 100
 $List.Columns[1].Width = 500
+$List.MultiSelect = "false"
 
 #populate list
 $object.ForEach( {
@@ -68,48 +53,19 @@ $object.ForEach( {
     $List.Items.AddRange(($buffer))
 })
 
-#Other Inputs
-$Label4 = New-Object System.Windows.Forms.Label
-$Label4.Text = "Input4"
-$Label4.Location = New-Object System.Drawing.Size(10,254)
-$Template4 = New-Object System.Windows.Forms.Textbox
-$Template4.Location = New-Object System.Drawing.Size(56,250)
-$Template4.Size = New-Object System.Drawing.Size(300,20)
-
-$Label5 = New-Object System.Windows.Forms.Label
-$Label5.Text = "Input5"
-$Label5.Location = New-Object System.Drawing.Size(10,286)
-$Template5 = New-Object System.Windows.Forms.Textbox
-$Template5.Location = New-Object System.Drawing.Size(56,280)
-$Template5.Size = New-Object System.Drawing.Size(300,20)
-
-$Label6 = New-Object System.Windows.Forms.Label
-$Label6.Text = "Input6"
-$Label6.Location = New-Object System.Drawing.Size(10,314)
-$Template6 = New-Object System.Windows.Forms.Textbox
-$Template6.Location = New-Object System.Drawing.Size(56,310)
-$Template6.Size = New-Object System.Drawing.Size(300,20)
-
-$Label7 = New-Object System.Windows.Forms.Label
-$Label7.Text = "Input6"
-$Label7.Location = New-Object System.Drawing.Size(235,427)
-$Option1 = New-Object System.Windows.Forms.CheckBox
-$Option1.Location = New-Object System.Drawing.Size(280,422)
-
 $Button1.Add_Click({
-        $buffer = $Label1.Text + ": " + $Template1.text + "`n"
-        $buffer += $Label2.Text + ": " + $Template2.text + "`n"
-        $buffer += $Label3.Text + ": " + $Template3.text + "`n"
-
+        $buffer = $Label1.Text + ": " + $input1.text + "`n"
+        $buffer += $Label2.Text + ": " + $input2.text + "`n"
+        $buffer += $Label3.Text + ": " + $input3.text + "`n"
         If($List.SelectedIndices -eq "null"){
             $buffer += "Empty"
         }
         $buffer += $object[$List.SelectedIndices].instructions
         $List.SelectedIndices
         If($Option1.Checked){
-            $buffer +=  "`n" + $Label4.Text + ": " + $Template4.text + "`n"
-            $buffer += $Label5.Text + ": " + $Template5.text + "`n"
-            $buffer += $Label6.Text + ": " + $Template6.text + "`n"
+            $buffer +=  "`n" + $Label4.Text + ": " + $input4.text + "`n"
+            $buffer += $Label5.Text + ": " + $input5.text + "`n"
+            $buffer += $Label6.Text + ": " + $input6.text + "`n"
         }
 
         Set-Clipboard -Value $buffer
@@ -121,31 +77,116 @@ $Button2.Add_Click({
         
     })
 
-#Render to form
-$Form.Controls.Add($Button1)
-$Form.Controls.Add($Button2)
-$Form.Controls.Add($Address)
-$Form.Controls.Add($About)
 
-$Form.Controls.Add($Template1)
-$Form.Controls.Add($Label1)
-$Form.Controls.Add($Template2)
-$Form.Controls.Add($Label2)
-$Form.Controls.Add($Template3)
-$Form.Controls.Add($Label3)
+
+
+Function CreateCheckbox{
+    Param  ( $x, $y)
+
+    $Checkbox = New-Object System.Windows.Forms.CheckBox
+    $Checkbox.Location = New-Object System.Drawing.Size($x,$y)
+
+    $Form.Controls.Add($Checkbox)
+    return $Checkbox
+}
+
+Function CreateText{
+    Param  ($text, $x, $y, $sx, $sy, $height, [string]$color="black", $color2)
+
+    $Label = New-Object System.Windows.Forms.Label
+    $Label.Text = $text
+    $Label.ForeColor = $color
+    $Label.BackColor = $color2
+    $Label.TextAlign = "MiddleCenter"
+    $Label.Size = New-Object System.Drawing.Size($sx,$sy)
+    $Label.Font = New-Object System.Drawing.Font("Arial", $height, [Drawing.FontStyle]::Bold)
+    $Label.Location = New-Object System.Drawing.Size($x,$y)
+
+    $Form.Controls.Add($Label)
+}
+
+Function CreateText{
+    Param  ($text, $x, $y, $sx, $sy, $height, [string]$color="black", $color2)
+
+    $Label = New-Object System.Windows.Forms.Label
+    $Label.Text = $text
+    $Label.ForeColor = $color
+    $Label.BackColor = $color2
+    $Label.TextAlign = "MiddleCenter"
+    $Label.Size = New-Object System.Drawing.Size($sx,$sy)
+    $Label.Font = New-Object System.Drawing.Font("Arial", $height, [Drawing.FontStyle]::Bold)
+    $Label.Location = New-Object System.Drawing.Size($x,$y)
+
+    $Form.Controls.Add($Label)
+}
+
+Function CreateSymbol{
+    Param  ($text, $x, $y, $sx, $sy, $height, [string]$color="black", $color2)
+
+    $Label = New-Object System.Windows.Forms.Label
+    $Label.Text = $text
+    $Label.ForeColor = $color
+    $Label.BackColor = $color2
+    $Label.TextAlign = "MiddleCenter"
+    $Label.Size = New-Object System.Drawing.Size($sx,$sy)
+    $Label.Font = New-Object System.Drawing.Font("Webdings", $height, [Drawing.FontStyle]::Bold)
+    $Label.Location = New-Object System.Drawing.Size($x,$y)
+
+    $Form.Controls.Add($Label)
+}
+
+
+Function CreatePanel{
+    Param  ($x, $y, $sx, $sy,[string]$color)
+
+    $Panel = New-Object system.Windows.Forms.Panel
+    $Panel.Location = New-Object System.Drawing.Size($x, $y)
+    $Panel.Size = New-Object System.Drawing.Size($sx, $sy)
+    $Panel.BorderStyle = "none"
+    $Panel.BackColor = $color
+    $Form.Controls.Add($Panel)
+}
+
+Function CreateInput{
+    Param  ($x, $y, $sx, $sy)
+
+    $Template = New-Object System.Windows.Forms.Textbox
+    $Template.Location = New-Object System.Drawing.Size($x, $y)
+    $Template.Size = New-Object System.Drawing.Size($sx, $sy)
+    $Template.Font = New-Object System.Drawing.Font("Arial", 16)
+    $Form.Controls.Add($Template)
+
+    return $Template
+
+}
+
+Function CreateButton{
+    Param  ($text, $x, $y, $sx, $sy)
+
+    $Button = New-Object System.Windows.Forms.Button
+    $Button.Text = $text
+    $Button.Size = New-Object System.Drawing.Size($sx, $sy)
+    $Button.Location = New-Object System.Drawing.Size($x,$y)
+    $Button.Font = New-Object System.Drawing.Font("Arial", 16, [Drawing.FontStyle]::Bold)
+    $Button.ForeColor = "white"
+    $Button.BackColor = "#1BB697"
+    $Button.FlatStyle = "Flat"
+    $Form.Controls.Add($Button)
+
+    return $Button
+}
+
+#Render code
+
+CreateSymbol "@" 5 24 30 20 18 "White" "#464C58";
+CreateText "Template Tool" 28 10 174 50 18 "White" "#464C58";
+
 $Form.Controls.Add($List)
+CreatePanel 0 0 $sidebarSize 70 "#464C58";
+CreatePanel 0 0 $sidebarSize $windowHeight "#525967"; 
+CreatePanel 0 0 $windowWidth 70 "#4D95DC"; 
 
-$Form.Controls.Add($Template4)
-$Form.Controls.Add($Label4)
-$Form.Controls.Add($Template5)
-$Form.Controls.Add($Label5)
-$Form.Controls.Add($Template6)
-$Form.Controls.Add($Label6)
-
-
-$Form.Controls.Add($Option1)
-$Form.Controls.Add($Label7)
-
+#Copy Button
 
 $object = 
 @{
@@ -163,7 +204,7 @@ $object =
     instructions = "
 -Do this
 -Do that
--Solved
+-Solved22
 "
 },
 @{
@@ -172,36 +213,10 @@ $object =
     instructions = "
 -Do this
 -Do that
--Solved
+-Solved33
 "
-},
-@{
-    name = "Example 2"
-    description = "Gonzalez"
-    instructions = "
--Do this
--Do that
--Solved
-"
-},
-@{
-    name = "Example 2"
-    description = "Gonzalez"
-    instructions = "
--Do this
--Do that
--Solved
-"
-},
-@{
-    name = "Example 2"
-    description = "Gonzalez"
-    instructions = "
--Do this
--Do that
--Solved
-"
-},
+}
+
 
 
 $Form.ShowDialog()
