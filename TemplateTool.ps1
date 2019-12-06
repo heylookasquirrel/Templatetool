@@ -4,6 +4,33 @@ $windowHeight = 600;
 $windowWidth = 1000;
 $sidebarSize = 210;
 
+
+
+[System.Collections.Arraylist]$lines = @(@{
+    lines = ""
+})
+
+[System.Collections.Arraylist]$values = @()
+
+$database = 
+@{
+    name = "Example 1"
+    description = "This is a description"
+    instructions = 
+    "Do step one",
+    "Then step two",
+    "Completed"
+},
+@{
+    name = "Example 2"
+    description = "This is a description"
+    instructions = 
+    "Do step one",
+    "Then step atre",
+    "Completed"
+
+}
+
 Function CreateCheckbox{
     Param  ( $x, $y)
 
@@ -84,6 +111,23 @@ Function CreateInput{
 
 }
 
+Function CreateDropdown{
+    Param  ($x, $y, $sx, $sy, $items)
+
+    $Template = New-Object System.Windows.Forms.ComboBox
+    $Template.Location = New-Object System.Drawing.Size($x, $y)
+    $Template.Size = New-Object System.Drawing.Size($sx, $sy)
+    $Template.Font = New-Object System.Drawing.Font("Arial", 16)
+    $items.forEach({
+        $Template.Items.Add($_)
+    })
+    $Template.SelectedItem = $Template.Items[0]
+    $Form.Controls.Add($Template)
+
+    return $Template
+
+}
+
 Function CreateButton{
     Param  ($text, $x, $y, $sx, $sy)
 
@@ -110,34 +154,73 @@ Function MoveObject{
 }
 
 Function CreateLines{
-    Param ($point)
-    Clear-Variable $point
-    [System.Collections.ArrayList]$object = @()
-    $i = 0
+    Param ($flag=0)
+
+    $i = 0 #lines loop
+    $e = 0 #Values loop
+
+
+    if($flag){
+        #if flag is set, update values in the lines variable
+        $values.ForEach({ 
+            if( -NOT ($e -eq ($lines.count))){
+                $lines[$e].text = $_.text
+            }
+            #Removes UI links from form
+            $form.Controls.Remove($_)
+            $e += 1;
+        })
+    }
+    #clears UI objects
+    $values.RemoveRange(0,$values.Count)
     $lines.ForEach({
         $temp = CreateInput ($sidebarSize + 480) (120 + ($i * 40))  ($windowWidth - ($sidebarSize + 500)) 40
-        $i = $i + 1;
-        $Object.Add($temp)
-    })
-    return $object
+        $temp.Text = $_.text
+        $i += 1;
+        $values.Add($temp)
+    }) 
+
 }
 
-Function RedrawLines{
-    
+Function LoadLines{
+    Param ($Object)
+    $e = 0
+
+    $values.ForEach({ 
+        #Removes UI links from form
+        $form.Controls.Remove($_)
+        $e += 1;
+    })
+
+    $Lines.RemoveRange(0,$lines.Count)
+   
+    $Object.ForEach({
+        
+        $Lines.Add(@{
+            text = $_
+        })
+    })
+    CreateLines 
 }
 
 Function AddLine{
-    Write-Host $values
-    $lines.Add(@{
-        text = "line"
+    if($lines.count -eq 10){
+        return
+    }
+    write-host $lines[0]
+    $lines.add(@{
+        text = ""
     })
-    CreateLines
+    CreateLines 1
 }
 
 Function RemoveLine{
-     
+    if($lines.count -eq 0){
+        return
+    }
+    $lines.removeAt(($lines.Count-1))
+    CreateLines 1
 }
-
 
 
 $Form = New-Object system.Windows.Forms.Form
@@ -145,6 +228,8 @@ $Form.Text = "Template Tool"
 $Form.Size = New-Object System.Drawing.Size($windowWidth,$windowHeight)
 $Form.FormBorderStyle = "FixedSingle"
 
+
+CreateText "Created By: Jacob Gonzalez" 0 ($windowHeight - 50) 142 30 7 "Black" "#525967";
 
 #UI drawing and assignment
 $Button1 = CreateButton "Copy" ($sidebarSize + 10) ($windowHeight - 80) 80 40
@@ -170,17 +255,18 @@ CreateText "Input 6" ($sidebarSize + 10) 456 130 40 12 "Black" "#F0F0F0";
 CreateText "Input" ($sidebarSize + 120) ($windowHeight - 70) 50 20 12 "Black" "#F0F0F0";
 $option1 = CreateCheckbox ($sidebarSize + 100) ($windowHeight - 72)
 
-[System.Collections.ArrayList]$lines = @{
-    text = "line2"
-},
-@{
-    text = "line"
-},
-@{
-    text = "line2"
-}
 
-[System.Collections.ArrayList]$values = CreateLines 
+$dropdownItems1 = "Los Angeles","Colorado","New York"
+$dropdownItems2 = 0,1,2,3,4,5,6,7,8,9
+
+$dropdown1 = CreateDropdown ($sidebarSize + 150) 20 ($windowWidth - ($sidebarSize + 470)) 40 $dropdownItems1
+CreateText "Input" ($sidebarSize + 10) 22 100 30 14 "Black" "#4D95DC";
+$dropdown2 = CreateDropdown ($sidebarSize + 580) 20 ($windowWidth - ($sidebarSize + 750)) 40 $dropdownItems2
+CreateText "Input" ($sidebarSize + 470) 22 100 30 14 "Black" "#4D95DC";
+$dropdown3 = CreateDropdown ($sidebarSize + 710) 20 ($windowWidth - ($sidebarSize + 750)) 40 $dropdownItems2
+CreateText "Input" ($sidebarSize + 620) 22 100 30 14 "Black" "#4D95DC";
+
+CreateLines 
 
 #List object
 $List = New-Object System.Windows.Forms.ListView
@@ -197,22 +283,30 @@ $List.Columns[1].Width = 500
 $List.MultiSelect = "false"
 
 #populate list
-$object.ForEach( {
+$database.ForEach( {
     $buffer = New-Object System.Windows.Forms.ListViewItem($_.name)
     $buffer.SubItems.Add($_.description)
     $List.Items.AddRange(($buffer))
 })
 
 $Button1.Add_Click({
-        AddLine
-        $buffer = $Label1.Text + ": " + $input1.text + "`n"
-        $buffer += $Label2.Text + ": " + $input2.text + "`n"
-        $buffer += $Label3.Text + ": " + $input3.text + "`n"
+     
+        $buffer = "Input" + ": " + $dropdown2.selecteditem + "`n" 
+        $buffer += "Input" + ": " + $dropdown3.selecteditem + "`n"     
+        $buffer += "Input 1" + ": " + $input1.text + "`n"
+        $buffer += "Input 2" + ": " + $input2.text + "`n"
+        $buffer += "Input 3" + ": " + $input3.text + "`n" 
+        $buffer += "Input 4" + ": " + $dropdown1.selecteditem + "`n`n" 
         If($List.SelectedIndices -eq "null"){
             $buffer += "Empty"
         }
-        $buffer += $object[$List.SelectedIndices].instructions
-        $List.SelectedIndices
+        
+        $values.forEach({
+            
+            $buffer += "-" + $_.text + "`n"
+         
+        })
+
         If($Option1.Checked){
             $buffer +=  "`n" + $Label4.Text + ": " + $input4.text + "`n"
             $buffer += $Label5.Text + ": " + $input5.text + "`n"
@@ -223,7 +317,8 @@ $Button1.Add_Click({
     })
 
 $Button2.Add_Click({
-        $buffer = "/Offerra " + "test"
+        $buffer = "/Offerra "
+        $buffer += $address.text
         Start-Process -FilePath "C:\Windows\System32\msra.exe" -Args $buffer
         
 })
@@ -234,6 +329,10 @@ $Button3.Add_Click({
 
 $Button4.Add_Click({
         RemoveLine
+})
+
+$List.Add_Click({
+    LoadLines $database[$List.SelectedIndices].instructions
 })
 
 
@@ -252,34 +351,7 @@ CreatePanel 0 0 $windowWidth 70 "#4D95DC";
 
 #Copy Button
 
-$object = 
-@{
-    name = "Example 1"
-    description = "Jacob"
-    instructions = "
--Do this
--Do that
--Solved
-"
-},
-@{
-    name = "Example 2"
-    description = "Gonzalez"
-    instructions = "
--Do this
--Do that
--Solved22
-"
-},
-@{
-    name = "Example 2"
-    description = "Gonzalez"
-    instructions = "
--Do this
--Do that
--Solved33
-"
-}
+
 
 
 
